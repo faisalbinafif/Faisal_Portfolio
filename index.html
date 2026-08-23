@@ -490,39 +490,49 @@
     <script>
       document.getElementById("year").textContent = new Date().getFullYear();
       document.addEventListener("DOMContentLoaded", () => {
-  // 1. Select all your section elements and your Bootstrap nav links
   const sections = document.querySelectorAll("section");
   const navLinks = document.querySelectorAll("#nav .nav-link");
 
-  // 2. Configure the screen boundaries (the "trigger zone")
+  // 1. Standard Intersection Observer for clean scrolling detection
   const options = {
-    root: null, // Uses the browser viewport
-    // Creates a narrow tracking strip in the top/middle of the screen
-    rootMargin: "-25% 0px -55% 0px", 
-    threshold: 0 // Triggers the instant a section edge enters the zone
+    root: null,
+    rootMargin: "-30% 0px -60% 0px", // Trigger area in upper-middle screen
+    threshold: 0
   };
 
-  // 3. Define what happens when a section enters the trigger zone
   const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      // Check if the section is currently active on screen
-      if (entry.isIntersecting) {
-        const activeId = entry.target.getAttribute("id");
+    // Only run this logic if we aren't resting at the very top of the page
+    if (window.scrollY > 20) {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const activeId = entry.target.getAttribute("id");
 
-        // Loop through links to manage Bootstrap's active class
-        navLinks.forEach((link) => {
-          if (link.getAttribute("href") === `#${activeId}`) {
-            link.classList.add("active");
-          } else {
-            link.classList.remove("active");
-          }
-        });
-      }
-    });
+          navLinks.forEach((link) => {
+            if (link.getAttribute("href") === `#${activeId}`) {
+              link.classList.add("active");
+            } else {
+              link.classList.remove("active");
+            }
+          });
+        }
+      });
+    }
   }, options);
 
-  // 4. Start tracking every section element on the page
   sections.forEach((section) => observer.observe(section));
+
+  // 2. Separate scroll listener dedicated ONLY to catching the top-of-page snap
+  window.addEventListener("scroll", () => {
+    if (window.scrollY <= 20) {
+      navLinks.forEach((link) => {
+        if (link.getAttribute("href") === "#home") {
+          link.classList.add("active");
+        } else {
+          link.classList.remove("active");
+        }
+      });
+    }
+  });
 });
       
     </script>
