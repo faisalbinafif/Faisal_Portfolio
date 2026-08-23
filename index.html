@@ -489,6 +489,42 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
       document.getElementById("year").textContent = new Date().getFullYear();
+      document.addEventListener("DOMContentLoaded", () => {
+  // 1. Select all your section elements and your Bootstrap nav links
+  const sections = document.querySelectorAll("section");
+  const navLinks = document.querySelectorAll("#nav .nav-link");
+
+  // 2. Configure the screen boundaries (the "trigger zone")
+  const options = {
+    root: null, // Uses the browser viewport
+    // Creates a narrow tracking strip in the top/middle of the screen
+    rootMargin: "-25% 0px -55% 0px", 
+    threshold: 0 // Triggers the instant a section edge enters the zone
+  };
+
+  // 3. Define what happens when a section enters the trigger zone
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      // Check if the section is currently active on screen
+      if (entry.isIntersecting) {
+        const activeId = entry.target.getAttribute("id");
+
+        // Loop through links to manage Bootstrap's active class
+        navLinks.forEach((link) => {
+          if (link.getAttribute("href") === `#${activeId}`) {
+            link.classList.add("active");
+          } else {
+            link.classList.remove("active");
+          }
+        });
+      }
+    });
+  }, options);
+
+  // 4. Start tracking every section element on the page
+  sections.forEach((section) => observer.observe(section));
+});
+      
     </script>
   </body>
 </html>
