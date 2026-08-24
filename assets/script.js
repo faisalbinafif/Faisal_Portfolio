@@ -44,3 +44,14 @@ document.getElementById("year").textContent = new Date().getFullYear();
           }
         });
       });
+document.addEventListener("DOMContentLoaded", function () {
+  const navbar = document.getElementById("nav");
+  const navLinks = document.querySelectorAll("#nav .nav-link");
+
+  navLinks.forEach(function (link) {
+    link.addEventListener("click", function () {
+      const navbarCollapse = bootstrap.Collapse.getOrCreateInstance(navbar);
+      navbarCollapse.hide();
+    });
+  });
+});
